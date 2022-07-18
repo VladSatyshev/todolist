@@ -1,0 +1,69 @@
+{% extends 'base/main.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+    .logout {
+        position:absolute;
+        top:0;
+        right:0;
+    }
+    .login{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-top: -50px;
+        margin-left: -50px;
+        width: 200px;
+        height: 200px;
+    }
+    a:visited {
+    color: blue;
+    background-color: transparent;
+    text-decoration: none;
+    }
+    img{
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+        border-radius: 15%;
+    }
+    img:hover {
+        box-shadow: 0 0 2px 1px rgba(0, 140, 186, 0.5);
+    }
+</style>
+
+
+<body>
+    {% if user.is_authenticated %}
+    <p><h3>Hi {{request.user.username}}!</h3></p>
+    <div class="logout">
+        <p>
+            <h6> You can <a href="{% url 'logout' %}">logout</a> if you want.</h6>
+        </p>
+    </div>
+        <ul>
+            {% for activity in activities %}
+                {% if not activity.completed %}
+                <li>
+                    {{activity.name}} <a href="{% url 'check' activity.id %}">Check</a>|<a href="{% url 'delete' activity.id %}">Delete</a>
+                </li>
+                {% else %}
+                <li>
+                    <s>{{activity.name}}</s> <a href="{% url 'check' activity.id %}">Check</a>|<a href="{% url 'delete' activity.id %}">Delete</a>
+                </li> 
+                {% endif %}
+            {% endfor %}
+        </ul>
+        <p>
+            <a href="{% url 'add_activity' %}">Add new activity</a>
+        </p>
+    {% else %}
+        <div class="login">
+            <p> <a href="{% url 'login' %}">Login</a> to view your ToDo List!</p>
+            <a href="{% url 'meow' %}"><img src="{% static 'images/img.jpg' %}"></a>
+        </div>
+    {% endif %}
+</body>
+{% endblock content %}
